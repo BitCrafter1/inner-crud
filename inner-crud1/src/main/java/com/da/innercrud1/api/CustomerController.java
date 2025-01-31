@@ -5,8 +5,10 @@ import com.da.innercrud1.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -14,6 +16,7 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
 
     @PostMapping()
     public ResponseEntity<CustomerDto> createCustomer(@RequestBody CustomerDto customerDto) {
@@ -26,6 +29,7 @@ public class CustomerController {
         CustomerDto customer = customerService.getCustomerById(id);
         return ResponseEntity.ok(customer);
     }
+
 
     @PutMapping("/update/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody CustomerDto customerDto) {

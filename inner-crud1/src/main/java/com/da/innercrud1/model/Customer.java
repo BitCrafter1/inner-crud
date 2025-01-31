@@ -30,7 +30,7 @@ public class Customer implements UserDetails {
     private String username;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Enumerated (EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "customer")

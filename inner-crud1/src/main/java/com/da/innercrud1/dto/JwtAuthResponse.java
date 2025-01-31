@@ -8,6 +8,6 @@ public class JwtAuthResponse {
 
     private String token;
     private String refreshToken;
-    private String id;
     private Role role;
+    private Long id;
 }

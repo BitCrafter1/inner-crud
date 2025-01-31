@@ -23,7 +23,8 @@ public class AuthentificationServiceImpl implements AuthService {
     private final JWTService jwtService;
 
     public JwtAuthResponse authenticate(AuthRequest authRequest) {
-authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken
+            (authRequest.getUsername(), authRequest.getPassword()));
 
 var customer = customerRepository.findByEmail(authRequest.getUsername()).orElseThrow(()  -> new UsernameNotFoundException("Invalid Username"));
 var jwt = jwtService.generateToken(customer);

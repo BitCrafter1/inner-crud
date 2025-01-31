@@ -2,7 +2,8 @@ package com.da.innercrud1.filter;
 
 import com.da.innercrud1.service.impl.JWTService;
 import com.da.innercrud1.service.impl.UserService;
-import io.micrometer.common.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -27,22 +28,22 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter {
     private final UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String email;
 
-        if (StringUtils.isEmpty(authHeader) || !org.springframework.util.StringUtils.startsWithIgnoreCase(authHeader, "Bearer ")) {
+        if (authHeader == null || !StringUtils.startsWith(authHeader, "Bearer ")) {
             filterChain.doFilter(request, response);
-            return;
+            return ;
         }
         jwt = authHeader.substring(7);
         email = jwtService.extractUsername(jwt);
         if (StringUtils.isNotEmpty(email) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.UserDetailsService().loadUserByUsername(email);
+            UserDetails userDetails = userService.userDetailsService().loadUserByUsername(email);
 
-            if (jwtService.IsTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
@@ -56,6 +57,7 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter {
 
             }
             filterChain.doFilter(request, response);
+
         }
 
     }
